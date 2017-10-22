@@ -13,8 +13,19 @@
 #include "ordenacion.h"
 
 /***************************************************/
-/* Funcion: InsertSort    Fecha:                   */
-/* Vuestro comentario                              */
+/* Funcion: BubbleSort    Fecha: 19/10/2017        */
+/* Autores: Rafael Sánchez, Sergio Galán           */
+/*                                                 */
+/* Funcion que ordena una tabla por el método de   */
+/* la burbuja                                      */
+/*                                                 */
+/* Entrada:                                        */
+/* int* tabla: Array de enteros a ordenar          */
+/* int ip: Indice del elemento desde el que ordenar*/
+/* int iu: Indice del elemento hasta el que ordenar*/
+/* Salida:                                         */
+/* int: Numero de veces que se ejecutó la OB       */
+/* ERR en caso de error                            */
 /***************************************************/
 int BubbleSort(int* tabla, int ip, int iu)
 {
