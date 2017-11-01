@@ -111,7 +111,7 @@ short genera_tiempos_ordenacion(pfunc_ordena metodo, char* fichero,
   PTIEMPO ptiempo;
   int i, size, j;
 
-  if (!metodo || !fichero || incr <= 0 || num_min < 0 || num_max < 0 || num_min > num_max || n_perms < 0){
+  if (!metodo || !fichero || incr <= 0 || num_min < 0 || num_max < 0 || num_min > num_max || n_perms <= 0){
     return ERR;
   }
 

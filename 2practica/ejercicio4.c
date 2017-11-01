@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     fprintf(stderr, " -tamanio : numero elementos permutacion.\n");
     return 0;
   }
-  printf("Practica numero 1, apartado 4\n");
+  printf("Practica numero 2, apartado 4\n");
   printf("Realizada por: Sergio Galán Martín, Rafael Sánchez Sánchez\n");
   printf("Grupo: 1201\n");
 
@@ -49,10 +49,10 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  ret = MergeSort(perm, 0, tamano-1);
+  ret = QuickSort(perm, 0, tamano-1);
 
   if (ret == ERR) {
-    printf("Error: Error en MergeSort\n");
+    printf("Error: Error en MergeSort/QuickSort\n");
     free(perm);
     exit(-1);
   }

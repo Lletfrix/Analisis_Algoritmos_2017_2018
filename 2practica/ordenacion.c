@@ -17,6 +17,8 @@
 int merge (int* tabla, int ip, int iu, int imedio);
 int partir(int* tabla, int ip, int iu, int *pos);
 int medio (int *tabla, int ip, int iu, int *pos);
+int medio_avg (int *tabla, int ip, int iu, int *pos);
+int medio_stat (int *tabla, int ip, int iu, int *pos);
 
 /***************************************************/
 /* Funcion: BubbleSort    Fecha: 19/10/2017        */
@@ -104,27 +106,35 @@ int MergeSort (int* tabla, int ip, int  iu){
 /* ERR en caso de error                            */
 /***************************************************/
 int QuickSort (int* tabla, int ip, int  iu){
-  int im, errcode, nOb;
+  int errcode1 = 0, errcode2 = 0, c, *pivote = NULL;
+
   if (!tabla || ip > iu){
     return ERR;
   }
   if (ip == iu){
     return 0;
   }
-  im = partir(tabla, ip, iu);
-  if(ip < im -1){
-    errcode = QuickSort(tabla, ip, im -1);
-    if(errcode == ERR){
+  pivote = calloc(1, sizeof(int));
+  if(!pivote){
+  	return ERR;
+  }
+  c = partir(tabla, ip, iu, pivote);
+  if(ip < (*pivote) -1){
+    errcode1 = QuickSort(tabla, ip, (*pivote)-1);
+    if(errcode1 == ERR){
+      free(pivote);
       return ERR;
     }
   }
-  if(im+1 < iu){
-    errcode = QuickSort(tabla, im+1, iu);
-    if(errcode == ERR){
+  if((*pivote)+1 < iu){
+    errcode2 = QuickSort(tabla, (*pivote)+1, iu);
+    if(errcode2 == ERR){
+      free(pivote);
       return ERR;
     }
   }
-  return merge(tabla, ip, iu, im);
+  free(pivote);
+  return errcode1 + errcode2 + c;
 }
 
 int merge (int* tabla, int ip, int iu,  int imedio){
@@ -169,8 +179,50 @@ int merge (int* tabla, int ip, int iu,  int imedio){
 
 
 int partir(int* tabla, int ip, int iu, int *pos){
-
+  int temp, k, i, nOb = 0, ret;
+  ret = medio(tabla, ip, iu, pos);
+  if(ERR == ret){
+    return ERR;
+  }
+  nOb += ret;
+  k = tabla[*pos];
+  temp = tabla[*pos];
+  tabla[*pos] = tabla[ip];
+  tabla[ip] = temp;
+  *pos = ip;
+  for (i = ip+1; i <= iu; i++) {
+    if(tabla[i] < k){
+      *pos = (*pos)+1 ;
+      temp = tabla[i];
+      tabla[i] = tabla[*pos];
+      tabla[*pos] = temp;
+    }
+    nOb++;
+  }
+  temp = tabla[ip];
+  tabla[ip] = tabla[*pos];
+  tabla[*pos] = temp;
+  return nOb;
 }
 int medio (int *tabla, int ip, int iu, int *pos){
-
+  *pos = ip;
+  return 0;
+}
+int medio_avg (int *tabla, int ip, int iu, int *pos){
+  *pos = floor((ip+iu)/2);
+  return 0;
+}
+int medio_stat (int *tabla, int ip, int iu, int *pos){
+  int medio = floor((ip+iu)/2);
+  int a = tabla[ip], b = tabla[medio], c = tabla[iu];
+  if ((b - a) * (c - b) >= 0){ /* c > b > a || c < b < a */
+    *pos = medio;
+    return 1;
+  }
+  if((a - b) * (c - a) >= 0){
+    *pos = ip;
+    return 2;
+  }
+  *pos = iu;
+  return 2;
 }

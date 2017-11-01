@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  printf("Practica numero 1, apartado 2\n");
+  printf("Practica numero 2, apartado 2\n");
   printf("Realizada por: Sergio Galán Martín, Rafael Sánchez Sánchez\n");
   printf("Grupo: 1201\n");
 
