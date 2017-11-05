@@ -71,7 +71,7 @@ int BubbleSort(int* tabla, int ip, int iu)
 /* ERR en caso de error                            */
 /***************************************************/
 int MergeSort (int* tabla, int ip, int  iu){
-  int im, errcode;
+  int im, errcode1=0, errcode2=0;
   if (!tabla || ip > iu){
     return ERR;
   }
@@ -79,15 +79,15 @@ int MergeSort (int* tabla, int ip, int  iu){
     return 0;
   }
   im = floor((ip+iu)/2);
-  errcode = MergeSort(tabla, ip, im);
-    if(errcode == ERR){
+  errcode1 = MergeSort(tabla, ip, im);
+    if(errcode1 == ERR){
       return ERR;
     }
-  errcode = MergeSort(tabla, im+1, iu);
-    if(errcode == ERR){
+  errcode2 = MergeSort(tabla, im+1, iu);
+    if(errcode2 == ERR){
       return ERR;
     }
-  return _merge_(tabla, ip, iu, im);
+  return _merge_(tabla, ip, iu, im) + errcode1 + errcode2;
 }
 
 /***************************************************/
