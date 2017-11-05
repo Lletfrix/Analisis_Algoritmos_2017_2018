@@ -14,11 +14,11 @@
 #include <math.h>
 #include <stdlib.h>
 /* Funciones privada */
-int merge (int* tabla, int ip, int iu, int imedio);
-int partir(int* tabla, int ip, int iu, int *pos);
-int medio (int *tabla, int ip, int iu, int *pos);
-int medio_avg (int *tabla, int ip, int iu, int *pos);
-int medio_stat (int *tabla, int ip, int iu, int *pos);
+int _merge_ (int* tabla, int ip, int iu, int imedio);
+int _partir_(int* tabla, int ip, int iu, int *pos);
+int _medio_ (int *tabla, int ip, int iu, int *pos);
+int _medio_avg_ (int *tabla, int ip, int iu, int *pos);
+int _medio_stat_ (int *tabla, int ip, int iu, int *pos);
 
 /***************************************************/
 /* Funcion: BubbleSort    Fecha: 19/10/2017        */
@@ -87,7 +87,7 @@ int MergeSort (int* tabla, int ip, int  iu){
     if(errcode == ERR){
       return ERR;
     }
-  return merge(tabla, ip, iu, im);
+  return _merge_(tabla, ip, iu, im);
 }
 
 /***************************************************/
@@ -118,7 +118,7 @@ int QuickSort (int* tabla, int ip, int  iu){
   if(!pivote){
   	return ERR;
   }
-  c = partir(tabla, ip, iu, pivote);
+  c = _partir_(tabla, ip, iu, pivote);
   if(ip < (*pivote) -1){
     errcode1 = QuickSort(tabla, ip, (*pivote)-1);
     if(errcode1 == ERR){
@@ -137,7 +137,7 @@ int QuickSort (int* tabla, int ip, int  iu){
   return errcode1 + errcode2 + c;
 }
 
-int merge (int* tabla, int ip, int iu,  int imedio){
+int _merge_ (int* tabla, int ip, int iu,  int imedio){
   int* taux, i,j,k, nOb=0;
   if(!tabla){
     return ERR;
@@ -178,9 +178,9 @@ int merge (int* tabla, int ip, int iu,  int imedio){
 }
 
 
-int partir(int* tabla, int ip, int iu, int *pos){
+int _partir_(int* tabla, int ip, int iu, int *pos){
   int temp, k, i, nOb = 0, ret;
-  ret = medio(tabla, ip, iu, pos);
+  ret = _medio_(tabla, ip, iu, pos);
   if(ERR == ret){
     return ERR;
   }
@@ -204,15 +204,15 @@ int partir(int* tabla, int ip, int iu, int *pos){
   tabla[*pos] = temp;
   return nOb;
 }
-int medio (int *tabla, int ip, int iu, int *pos){
+int _medio_ (int *tabla, int ip, int iu, int *pos){
   *pos = ip;
   return 0;
 }
-int medio_avg (int *tabla, int ip, int iu, int *pos){
+int _medio_avg_ (int *tabla, int ip, int iu, int *pos){
   *pos = floor((ip+iu)/2);
   return 0;
 }
-int medio_stat (int *tabla, int ip, int iu, int *pos){
+int _medio_stat_ (int *tabla, int ip, int iu, int *pos){
   int medio = floor((ip+iu)/2);
   int a = tabla[ip], b = tabla[medio], c = tabla[iu];
   if ((b - a) * (c - b) >= 0){ /* c > b > a || c < b < a */
