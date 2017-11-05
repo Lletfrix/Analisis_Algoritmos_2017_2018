@@ -106,7 +106,7 @@ int MergeSort (int* tabla, int ip, int  iu){
 /* ERR en caso de error                            */
 /***************************************************/
 int QuickSort (int* tabla, int ip, int  iu){
-  int errcode1 = 0, errcode2 = 0, c, *pivote = NULL;
+  int errcode1 = 0, errcode2 = 0, c, pivote;
 
   if (!tabla || ip > iu){
     return ERR;
@@ -114,26 +114,19 @@ int QuickSort (int* tabla, int ip, int  iu){
   if (ip == iu){
     return 0;
   }
-  pivote = calloc(1, sizeof(int));
-  if(!pivote){
-  	return ERR;
-  }
-  c = _partir_(tabla, ip, iu, pivote);
-  if(ip < (*pivote) -1){
-    errcode1 = QuickSort(tabla, ip, (*pivote)-1);
+  c = _partir_(tabla, ip, iu, &pivote);
+  if(ip < pivote -1){
+    errcode1 = QuickSort(tabla, ip, pivote-1);
     if(errcode1 == ERR){
-      free(pivote);
       return ERR;
     }
   }
-  if((*pivote)+1 < iu){
-    errcode2 = QuickSort(tabla, (*pivote)+1, iu);
+  if(pivote + 1 < iu){
+    errcode2 = QuickSort(tabla, pivote + 1, iu);
     if(errcode2 == ERR){
-      free(pivote);
       return ERR;
     }
   }
-  free(pivote);
   return errcode1 + errcode2 + c;
 }
 
