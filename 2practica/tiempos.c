@@ -39,7 +39,7 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
 {
   int **permutaciones, current_ob, min_ob, max_ob, all_ob=0, i;
   clock_t t_start, t_end, t_total=0;
-  double t_avg, avg_ob;
+  double t_avg, avg_ob, clocks_per_sec_d;
 
   if(!ptiempo || N < 0 || n_perms < 0){
     return ERR;
@@ -65,10 +65,10 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
     }
     all_ob += current_ob;
   }
+  clocks_per_sec_d = (double) CLOCKS_PER_SEC;
   avg_ob = (double) all_ob/n_perms;
   t_avg = (double) t_total / n_perms;
-  t_avg *= 1000.0;
-  ptiempo->tiempo = (double) t_avg/(CLOCKS_PER_SEC);
+  ptiempo->tiempo = t_avg *= 1000.0f/(clocks_per_sec_d);
   ptiempo->min_ob = min_ob;
   ptiempo->medio_ob = avg_ob;
   ptiempo->max_ob = max_ob;

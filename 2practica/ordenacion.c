@@ -173,7 +173,7 @@ int _merge_ (int* tabla, int ip, int iu,  int imedio){
 
 int _partir_(int* tabla, int ip, int iu, int *pos){
   int temp, k, i, nOb = 0, ret;
-  ret = _medio_(tabla, ip, iu, pos);
+  ret = _medio_stat_(tabla, ip, iu, pos);
   if(ERR == ret){
     return ERR;
   }
