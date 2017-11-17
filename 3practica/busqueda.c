@@ -1,6 +1,6 @@
 /**
  *
- * Descripcion: Implementacion funciones para busqueda 
+ * Descripcion: Implementacion funciones para busqueda
  *
  * Fichero: busqueda.c
  * Autor: Carlos Aguirre
@@ -19,14 +19,14 @@
  *
  *  Descripcion: Recibe el numero de claves que hay que generar
  *               en el parametro n_claves. Las claves generadas
- *               iran de 1 a max. Las claves se devuelven en 
+ *               iran de 1 a max. Las claves se devuelven en
  *               el parametro claves que se debe reservar externamente
  *               a la funcion.
  */
-  
+
 /**
  *  Funcion: generador_claves_uniforme
- *               Esta fucnion genera todas las claves de 1 a max de forma 
+ *               Esta fucnion genera todas las claves de 1 a max de forma
  *               secuencial. Si n_claves==max entonces se generan cada clave
  *               una unica vez.
  */
@@ -57,36 +57,92 @@ void generador_claves_potencial(int *claves, int n_claves, int max)
   return;
 }
 
+void _swap_ (int *a, int *b){
+  int temp;
+  temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
 PDICC ini_diccionario (int tamanio, char orden)
 {
-	/* vuestro codigo */
+  if (tamanio <= 0 || orden != ORDENADO || orden != NO_ORDENADO) return NULL;
+	DICC *d = calloc(1, sizeof(DICC));
+  if (!d) return NULL;
+  d->tabla = calloc(tamanio,sizeof(int));
+  if(!d->tabla){
+    free (d);
+    return NULL;
+  }
+  d->tamanio = tamanio;
+  d->n_datos = 0;
+  d->orden = orden;
+  return d;
 }
 
 void libera_diccionario(PDICC pdicc)
 {
-	/* vuestro codigo */
+	if(!pdicc) return;
+  free(pdicc->tabla);
+  free(pdicc);
 }
 
 int inserta_diccionario(PDICC pdicc, int clave)
 {
-	/* vuestro codigo */
+  int i, cdc;
+	if(!pdicc) return ERR;
+  if(pdicc->n_datos + 1 > pdicc->tamanio) return ERR;
+  pdicc->tabla[pdicc->n_datos]=clave;
+  if(clave == NO_ORDENADO){
+    pdicc->n_datos++;
+    return 0;
+  }
+  cdc = 0;
+  i = pdicc->n_datos-1;
+  while(clave > pdicc->tabla[i]){
+    _swap_(&pdicc->tabla[i],&pdicc->tabla[i+1]);
+    i--;
+    cdc++;
+  }
+  pdicc->n_datos++;
+  return cdc;
 }
 
 int insercion_masiva_diccionario (PDICC pdicc,int *claves, int n_claves)
 {
-	/* vuestro codigo */
+  int i, cdc;
+  if(!pdicc || !claves || n_claves < 1) return ERR;
+  if(pdicc->n_datos + n_claves > pdicc->tamanio) return ERR;
+  for (i = 0, cdc = 0; i < n_claves; i++){
+    cdc += inserta_diccionario(pdicc, claves[i]);
+  }
+  return cdc;
 }
 
 int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo)
 {
-	/* vuestro codigo */
+  int *ppos, cdc;
+	if(!pdicc || !ppos || !metodo) return ERR;
+
+  cdc = metodo(pdicc->tabla, 0, pdicc->n_datos-1, ppos);
+  return cdc;
 }
 
 
 /* Funciones de busqueda del TAD Diccionario */
-int bbin(int *tabla,int P,int U,int clave,int *ppos)
+int bbin(int *tabla, int P, int U, int clave,int *ppos)
 {
-	/* vuestro codigo */
+  int i, cdc;
+	if(!tabla || P < 0 || U < 0 || P > U) return ERR;
+  for (cdc =0, i = (P+U)/2; P > U ;cdc++, i = (P+U)/2){
+    if(clave == tabla[i]){
+      ppos = &tabla[i];
+      return cdc+1;
+    }
+    clave > tabla[i]? P = i +1 : U = i -1;
+  }
+  ppos = NO_ENCONTRADO;
+  return cdc;
 }
 
 int blin(int *tabla,int P,int U,int clave,int *ppos)
@@ -98,5 +154,3 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos)
 {
 	/* vuestro codigo */
 }
-
-
