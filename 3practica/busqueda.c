@@ -66,8 +66,9 @@ void _swap_ (int *a, int *b){
 
 PDICC ini_diccionario (int tamanio, char orden)
 {
-  if (tamanio <= 0 || orden != ORDENADO || orden != NO_ORDENADO) return NULL;
-	DICC *d = calloc(1, sizeof(DICC));
+  DICC *d;
+  if (tamanio <= 0 || (orden != ORDENADO && orden != NO_ORDENADO)) return NULL;
+	d = calloc(1, sizeof(DICC));
   if (!d) return NULL;
   d->tabla = calloc(tamanio,sizeof(int));
   if(!d->tabla){
@@ -93,13 +94,17 @@ int inserta_diccionario(PDICC pdicc, int clave)
 	if(!pdicc) return ERR;
   if(pdicc->n_datos + 1 > pdicc->tamanio) return ERR;
   pdicc->tabla[pdicc->n_datos]=clave;
-  if(clave == NO_ORDENADO){
+  if(pdicc->orden == NO_ORDENADO){
+    pdicc->n_datos++;
+    return 0;
+  }
+  if(pdicc->n_datos == 0){
     pdicc->n_datos++;
     return 0;
   }
   cdc = 0;
   i = pdicc->n_datos-1;
-  while(clave > pdicc->tabla[i]){
+  while(clave < pdicc->tabla[i]){
     _swap_(&pdicc->tabla[i],&pdicc->tabla[i+1]);
     i--;
     cdc++;
@@ -121,10 +126,10 @@ int insercion_masiva_diccionario (PDICC pdicc,int *claves, int n_claves)
 
 int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo)
 {
-  int *ppos, cdc;
+  int cdc;
 	if(!pdicc || !ppos || !metodo) return ERR;
 
-  cdc = metodo(pdicc->tabla, 0, pdicc->n_datos-1, ppos);
+  cdc = metodo(pdicc->tabla, 0, pdicc->n_datos-1, clave, ppos);
   return cdc;
 }
 
@@ -134,23 +139,50 @@ int bbin(int *tabla, int P, int U, int clave,int *ppos)
 {
   int i, cdc;
 	if(!tabla || P < 0 || U < 0 || P > U) return ERR;
-  for (cdc =0, i = (P+U)/2; P > U ;cdc++, i = (P+U)/2){
+  for (cdc = 0, i = (P+U)/2; P <= U ;cdc++, i = (P+U)/2){
     if(clave == tabla[i]){
-      ppos = &tabla[i];
+      *ppos = i;
       return cdc+1;
     }
-    clave > tabla[i]? P = i +1 : U = i -1;
+    if(clave > tabla[i]){
+      P = i + 1;
+    }else{
+      U = i -1;
+    }
   }
-  ppos = NO_ENCONTRADO;
+  *ppos = NO_ENCONTRADO;
   return cdc;
 }
 
 int blin(int *tabla,int P,int U,int clave,int *ppos)
 {
-	/* vuestro codigo */
+  int *taux, *end, cdc;
+	if(!tabla || P < 0 || U < 0 || P > U) return ERR;
+  for(taux = tabla + P, end = tabla + U, cdc = 0; taux <= end; taux++, cdc++){
+    if(clave == *taux){
+      *ppos = taux - tabla;
+      return ++cdc;
+    }
+  }
+  *ppos = NO_ENCONTRADO;
+  return cdc;
 }
 
 int blin_auto(int *tabla,int P,int U,int clave,int *ppos)
 {
-	/* vuestro codigo */
+  int *taux, *end, cdc=0;
+	if(!tabla || P < 0 || U < 0 || P > U) return ERR;
+  if(clave == *tabla){
+    *ppos = 0;
+    return ++cdc;
+  }
+  for(taux = tabla + P + 1, end = tabla + U, cdc = 1; taux <= end; taux++, cdc++){
+    if(clave == *taux){
+      _swap_(taux, taux-1);
+      *ppos = taux - tabla - 1;
+      return ++cdc;
+    }
+  }
+  *ppos = NO_ENCONTRADO;
+  return cdc;
 }

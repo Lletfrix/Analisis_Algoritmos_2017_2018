@@ -1,6 +1,6 @@
 /**
  *
- * Descripcion: Funciones de cabecera para busqueda 
+ * Descripcion: Funciones de cabecera para busqueda
  *
  * Fichero: busqueda.h
  * Autor: Carlos Aguirre
@@ -54,7 +54,7 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos);
  *
  *  Descripcion: Reciben el numero de claves que hay que generar
  *               en el parametro n_claves. Las claves generadas
- *               van de 1 a max. Las claves se devuelven en 
+ *               van de 1 a max. Las claves se devuelven en
  *               el parametro claves que se debe reservar externamente
  *               a la funcion.
  *
@@ -64,4 +64,3 @@ void generador_claves_potencial(int *claves, int n_claves, int max);
 
 
 #endif
-

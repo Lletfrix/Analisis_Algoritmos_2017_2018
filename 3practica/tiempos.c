@@ -12,6 +12,7 @@
 #include "tiempos.h"
 #include "ordenacion.h"
 #include "permutaciones.h"
+#include "busqueda.h"
 #include <math.h>
 
 /******************************************************/
@@ -41,7 +42,7 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
   clock_t t_start, t_end, t_total=0;
   double t_avg, avg_ob, clocks_per_sec_d;
 
-  if(!ptiempo || N < 0 || n_perms < 0){
+  if(!ptiempo || N < 0 || n_perms < 0 || !metodo){
     return ERR;
   }
 
@@ -171,7 +172,32 @@ short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves gene
                                 int num_min, int num_max,
                                 int incr, int n_veces)
 {
+  PTIEMPO ptiempo;
+  int i, size, j;
 
+  if (!metodo || !fichero || incr <= 0 || num_min < 0 || num_max < 0 || num_min > num_max || n_veces <= 0 || (orden != ORDENADO && orden != NO_ORDENADO) || !generador){
+    return ERR;
+  }
+
+  size = ceil((num_max - num_min)/incr);
+  ptiempo = calloc(size+1, sizeof(TIEMPO));
+  if(!ptiempo){
+    return ERR;
+  }
+  for(i=num_min, j=0; i<=num_max; i+=incr, j++){
+    if(ERR == tiempo_medio_busqueda(metodo, generador, orden, i, n_veces, &ptiempo[j])){
+      free(ptiempo);
+      return ERR;
+    }
+  }
+  for(j=0;j<=size;j++){
+    if (ERR == guarda_tabla_tiempos(fichero, &ptiempo[j], j)){
+      free(ptiempo);
+      return ERR;
+    }
+  }
+  free(ptiempo);
+  return OK;
 }
 
 short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador,
@@ -180,5 +206,65 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
                               int n_veces,
                               PTIEMPO ptiempo)
 {
+  DICC* d;
+  int *perm, *claves, *caux, *end, current_ob, min_ob, max_ob, all_ob=0, pos;
+  clock_t t_start, t_end, t_total=0;
+  double t_avg, avg_ob, clocks_per_sec_d;
 
+  if(!ptiempo || N <= 0 || n_veces <= 0 || !metodo || !generador || (orden != ORDENADO && orden != NO_ORDENADO)){
+    return ERR;
+  }
+
+  d = ini_diccionario(N, orden);
+  if(!d){
+    return ERR;
+  }
+  perm = genera_perm(N);
+  if(!perm){
+    libera_diccionario(d);
+    return ERR;
+  }
+  if (ERR==insercion_masiva_diccionario(d, perm, N)){
+    free(perm);
+    libera_diccionario(d);
+    return ERR;
+  }
+  claves = calloc(n_veces * N, sizeof(int));
+  if(!claves){
+    free(perm);
+    libera_diccionario(d);
+    return ERR;
+  }
+  generador(claves, N, n_veces*N);
+
+  ptiempo->n_elems = N*n_veces;
+  ptiempo->N = N;
+
+  for (caux = claves, end = claves + N*n_veces; caux < end; ++caux){
+    t_start = clock();
+    current_ob = busca_diccionario(d, *caux, &pos, metodo);
+    t_end = clock();
+    t_total += t_end - t_start;
+    if(!(caux - claves)){
+      min_ob = current_ob;
+      max_ob = current_ob;
+    }else{
+      if (current_ob < min_ob) min_ob = current_ob;
+      if (current_ob > max_ob) max_ob = current_ob;
+    }
+    all_ob += current_ob;
+  }
+  clocks_per_sec_d = (double) CLOCKS_PER_SEC;
+  avg_ob = (double) all_ob/ptiempo->n_elems;
+  t_avg = (double) t_total /ptiempo->n_elems;
+  ptiempo->tiempo = t_avg *= 1.0f/(clocks_per_sec_d);
+  ptiempo->min_ob = min_ob;
+  ptiempo->medio_ob = avg_ob;
+  ptiempo->max_ob = max_ob;
+
+  free(claves);
+  free(perm);
+  libera_diccionario(d);
+
+  return OK;
 }

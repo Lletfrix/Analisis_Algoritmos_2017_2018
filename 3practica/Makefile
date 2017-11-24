@@ -5,8 +5,7 @@
 
 CC = gcc -ansi -pedantic
 CFLAGS = -Wall -g
-EXE = ejercicio1 ejercicio2 ejercicio3 ejercicio4 ejercicio5
-
+EXE = ejercicio1 ejercicio2
 all : $(EXE)
 
 .PHONY : clean
@@ -51,20 +50,8 @@ permutaciones.o : permutaciones.c permutaciones.h
 
 ejercicio1_test:
 	@echo Ejecutando ejercicio1
-	@./ejercicio1 -limInf 1 -limSup 5 -numN 10
+	@./ejercicio1 -tamanio 10 -clave 1
 
 ejercicio2_test:
 	@echo Ejecutando ejercicio2
-	@./ejercicio2 -tamanio 1 -numP 5
-
-ejercicio3_test:
-	@echo Ejecutando ejercicio3
-	@./ejercicio3 -tamanio 1 -numP 5
-
-ejercicio4_test:
-	@echo Ejecutando ejercicio4
-	@./ejercicio4 -tamanio 1
-
-ejercicio5_test:
-	@echo Ejecutando ejercicio5
-	@./ejercicio5 -num_min 1 -num_max 5 -incr 1 -numP 5 -fichSalida ejercicio5.log
+	@./ejercicio2 -num_min 1 -num_max 5 -incr 1 -n_veces 5 -fichSalida ejercicio2.log
