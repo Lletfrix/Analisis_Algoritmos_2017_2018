@@ -207,7 +207,8 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
                               PTIEMPO ptiempo)
 {
   DICC* d;
-  int *perm, *claves, *caux, *end, current_ob, min_ob, max_ob, all_ob=0, pos;
+  int *perm, *claves, *caux, *end, current_ob, min_ob, max_ob, pos;
+  long all_ob = 0;
   clock_t t_start, t_end, t_total=0;
   double t_avg, avg_ob, clocks_per_sec_d;
 
@@ -235,7 +236,7 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
     libera_diccionario(d);
     return ERR;
   }
-  generador(claves, N, n_veces*N);
+  generador(claves, n_veces*N, N);
 
   ptiempo->n_elems = N*n_veces;
   ptiempo->N = N;
@@ -244,6 +245,12 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
     t_start = clock();
     current_ob = busca_diccionario(d, *caux, &pos, metodo);
     t_end = clock();
+    if(current_ob == ERR){
+      free(claves);
+      free(perm);
+      libera_diccionario(d);
+      return ERR;
+    }
     t_total += t_end - t_start;
     if(!(caux - claves)){
       min_ob = current_ob;

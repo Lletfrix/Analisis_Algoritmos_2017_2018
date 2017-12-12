@@ -179,7 +179,7 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos)
   for(taux = tabla + P + 1, end = tabla + U, cdc = 1; taux <= end; taux++, cdc++){
     if(clave == *taux){
       _swap_(taux, taux-1);
-      *ppos = taux - tabla - 1;
+      *ppos = taux - tabla;
       return ++cdc;
     }
   }

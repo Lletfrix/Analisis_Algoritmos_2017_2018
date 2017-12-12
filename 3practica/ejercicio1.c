@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 
   printf("Practica numero 3, apartado 1\n");
   printf("Realizada por: Rafael Sanchez, Sergio Galan\n");
-  printf("Grupo: Vuestro grupo\n");
+  printf("Grupo: 1201\n");
 
   /* comprueba la linea de comandos */
   for(i = 1; i < argc; i++) {
@@ -89,7 +89,6 @@ int main(int argc, char** argv)
   } else {
     printf("Error al buscar la clave %d\n",clave);
   }
-
   free(perm);
   libera_diccionario(pdicc);
 
