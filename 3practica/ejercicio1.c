@@ -80,7 +80,7 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  nob = busca_diccionario(pdicc,clave,&pos,blin_auto);
+  nob = busca_diccionario(pdicc,clave,&pos,blin);
 
   if(pos >= 0) {
     printf("Clave %d encontrada en la posicion %d en %d op. basicas\n",clave,pos,nob);

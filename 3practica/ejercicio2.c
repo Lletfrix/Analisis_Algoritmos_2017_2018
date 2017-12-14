@@ -70,7 +70,7 @@ int main(int argc, char** argv)
   }
 
   /* calculamos los tiempos */
-  ret = genera_tiempos_busqueda(blin_auto, generador_claves_potencial, NO_ORDENADO,
+  ret = genera_tiempos_busqueda(bbin, generador_claves_potencial, ORDENADO,
                                 nombre, num_min, num_max, incr, n_veces);
   if (ret == ERR) {
     printf("Error en la funcion genera_tiempos_busqueda\n");

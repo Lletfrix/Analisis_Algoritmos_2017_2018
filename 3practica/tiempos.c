@@ -160,7 +160,7 @@ short guarda_tabla_tiempos(char* fichero, PTIEMPO tiempo, int n_tiempos)
   if(!fp){
     return ERR;
   }
-  fprintf(fp, "%d %f %f %d %d\n",tiempo->N, tiempo->tiempo, tiempo->medio_ob, tiempo->min_ob, tiempo->max_ob);
+  fprintf(fp, "%d %.16f %f %d %d\n",tiempo->N, tiempo->tiempo, tiempo->medio_ob, tiempo->min_ob, tiempo->max_ob);
   fclose(fp);
   return OK;
 
